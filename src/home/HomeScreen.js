@@ -3,7 +3,7 @@
 import Column from '../common/Column'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Row from '../common/Row'
-import {FlatList, StyleSheet, TextInput, TouchableOpacity, View, ScrollView} from 'react-native'
+import {FlatList, StyleSheet, TextInput, TouchableOpacity, View, ScrollView, Text} from 'react-native'
 import LargeText from '../common/LargeText'
 import ButtonText from '../common/ButtonText'
 import SmallText from '../common/SmallText'
@@ -39,14 +39,18 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     choiceSelected: {
-        fontSize: 50,
-        fontWeight: 'bold',
+        fontSize: 40,
         color: PRIMARY_TEXT,
+        textAlign: 'center',
     },
     randmoizerContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: 150,
+        minHeight: 150,
+        paddingTop: 0,
+    },
+    submitDisabled: {
+        backgroundColor: 'rgb(200,200,200)',
     },
 })
 
@@ -55,7 +59,7 @@ const getRandomIndex = index => Math.floor(Math.random() * index)
 @observer
 class HomeScreen extends Component {
     static navigationOptions = {
-        title: 'Where To Eat',
+        title: 'Home',
     }
 
     @observable foodChoices = []
@@ -66,7 +70,7 @@ class HomeScreen extends Component {
 
     @computed
     get addDisabled() {
-        return this.currentFood === ''
+        return this.currentFood === '' || this.isRandomizing
     }
 
     @computed
@@ -100,6 +104,9 @@ class HomeScreen extends Component {
 
     @action.bound
     removeFoodChoice(choiceKey) {
+        if (this.isRandomizing) {
+            return
+        }
         const cantStop = R.remove(choiceKey, 1, this.foodChoices)
 
         this.foodChoices = cantStop
@@ -109,6 +116,7 @@ class HomeScreen extends Component {
     startRandomizer() {
         const foodChoicesLengt = this.foodChoices.length
 
+        this.isRandomizing = true
         this.foodSelected = false
         const interval = setInterval(() => {
             this.selectedIndex = getRandomIndex(foodChoicesLengt)
@@ -117,9 +125,9 @@ class HomeScreen extends Component {
         setTimeout(() => {
             clearInterval(interval)
             this.foodSelected = true
+            this.isRandomizing = false
         }, 3000)
     }
-    // eslint-disable-next-line complexity
     render() {
         return (
             <ScrollView>
@@ -162,26 +170,23 @@ class HomeScreen extends Component {
                     <TouchableOpacity
                         disabled={this.randomizerDisabled}
                         onPress={this.startRandomizer}
-                        style={styles.submit}
+                        style={[styles.submit, this.randomizerDisabled && styles.submitDisabled]}
                     >
                         <Icon name="cutlery" size={20} color="rgb(255,255,255)" />
-                        <ButtonText value="LETS EAT!!!  " color="rgb(255,255,255)" style={styles.submitText} />
+                        <ButtonText value="START PICKING" color="rgb(255,255,255)" style={styles.submitText} />
                     </TouchableOpacity>
                 </Column>
 
-                {this.randomizerDisabled ? null : (
-                    <Column style={[styles.container, styles.randmoizerContainer]}>
-                        <LargeText value="You will be eating at" />
-                        {(this.foodChoices.length > 0 || !this.selected) && (
-                            <View height={70} justifyContent="center">
-                                <LargeText
-                                    value={this.foodChoices[this.selectedIndex]}
-                                    style={this.foodSelected && styles.choiceSelected}
-                                />
-                            </View>
-                        )}
-                    </Column>
-                )}
+                <Column style={[styles.container, styles.randmoizerContainer]} flex={1}>
+                    <ButtonText value="You will be eating at" />
+                    {(this.foodChoices.length > 0 || !this.selected) && (
+                        <View flex={1} justifyContent="center" alignItems="center">
+                            <Text style={this.foodSelected && styles.choiceSelected}>
+                                {this.foodChoices[this.selectedIndex]}
+                            </Text>
+                        </View>
+                    )}
+                </Column>
             </ScrollView>
         )
     }

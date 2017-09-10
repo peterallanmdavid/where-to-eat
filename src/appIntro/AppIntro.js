@@ -3,6 +3,7 @@
 import {NavigationActions} from 'react-navigation'
 import React, {Component} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import {PRIMARY_TEXT} from '../colorConstants'
 
 const styles = StyleSheet.create({
     container: {
@@ -11,7 +12,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     header: {
-        fontSize: 40,
+        fontSize: 50,
+        color: PRIMARY_TEXT,
     },
     text: {
         fontSize: 20,
@@ -39,8 +41,8 @@ export default class AppIntro extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.header}>Where to eat???</Text>
-                <Text style={styles.text}>Let us decide for you</Text>
+                <Text style={styles.header}>Where To Eat</Text>
+                <Text style={styles.text}>Let us decide for you...</Text>
             </View>
         )
     }
