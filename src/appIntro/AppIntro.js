@@ -10,6 +10,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
+    header: {
+        fontSize: 40,
+    },
+    text: {
+        fontSize: 20,
+    },
 })
 
 export default class AppIntro extends Component {
@@ -33,7 +39,8 @@ export default class AppIntro extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>Where To Eat</Text>
+                <Text style={styles.header}>Where to eat???</Text>
+                <Text style={styles.text}>Let us decide for you</Text>
             </View>
         )
     }

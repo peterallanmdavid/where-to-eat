@@ -3,5 +3,7 @@ module.exports = {
     'rules': {
         'class-methods-use-this': "warn",
         "id-blacklist": "off",
+        'react/jsx-handler-names': "off",
+        "sort-imports": "off"
     }
 }
